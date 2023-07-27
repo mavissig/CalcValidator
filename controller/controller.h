@@ -14,6 +14,7 @@ namespace sc {
 class calcController {
  public:
   status_e validation(std::string &str);
+
  private:
   status_e status_;
 };
@@ -22,6 +23,6 @@ sc::status_e sc::calcController::validation(std::string &str) {
   validator V;
   return V.validate(str);
 }
-} // sc
+}  // namespace sc
 
-#endif //CALCVALIDATOR_CONTROLLER_CALCCONTROLLER_H_
+#endif  // CALCVALIDATOR_CONTROLLER_CALCCONTROLLER_H_
