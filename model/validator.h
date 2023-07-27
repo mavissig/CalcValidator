@@ -14,28 +14,39 @@ namespace sc {
 class validator {
  public:
   status_e validate(std::string &str);
-  status_e parser(std::string &str);
  private:
-  int date_;
+  status_e parser(std::string &str);
+  status_e check_bracket(std::string &str);
+  status_e status_;
 };
 
 sc::status_e sc::validator::validate(std::string &str) {
-  status_e current_status = status_e::OK;
-  current_status = parser(str);
-  return current_status;
+  status_ = check_bracket(str);
+  if(status_ == status_e::OK) status_ = parser(str);
+  return status_;
+}
+
+sc::status_e sc::validator::check_bracket(std::string &str) {
+  int condition = 0;
+  for (auto i = str.begin(); i != str.end(); i++) {
+    if (*i == '(') {
+      condition++;
+    }
+    if (*i == ')') {
+      condition--;
+      if (0 > condition) {
+        return status_e::ERROR;
+      }
+    }
+  }
+  return (0 != condition) ? status_e::ERROR : status_e::OK;
 }
 
 sc::status_e sc::validator::parser(std::string &str) {
-  std::regex regexPattern(R"(^(\s*((cos\()|(sin\()|x|\d+\.\d+|\d+|\\|\^|[\+\-()])\s*)+$)");
+  std::regex regexPattern(R"(^(\s*((cos\()|(sin\()|x|(\d+\.\d+(?!\d))|\d+|\\|\^|[\+\-()])\s*)+$)");
   if (std::regex_match(str, regexPattern)) {
-    std::cout << "All required characters are present in the string." << std::endl;
-    std::cout << "[current string]: " << str << std::endl;
-    std::cout << "src size= " << str.size() << std::endl;
     return status_e::OK;
   } else {
-    std::cout << "Not all required characters are present in the string." << std::endl;
-    std::cout << "[current string]: " << str << std::endl;
-    std::cout << "src size= " << str.size() << std::endl;
     return status_e::ERROR;
   }
 }
