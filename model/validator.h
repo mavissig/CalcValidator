@@ -45,7 +45,7 @@ sc::status_e sc::validator::check_bracket(std::string &str) {
 
 sc::status_e sc::validator::parser(std::string &str) {
   std::regex regexPattern(
-      R"(^(\s*((cos\()|(sin\()|x|(\d+\.\d+(?!\d))|\d+|\\|\^|(\+\+(?!\+))|(\+(?!\+))|[\-()])\s*)+$)");
+      R"(^(\s*(cos|sin|x|(\d+\.\d+(?!\d))|\d+|\\|\^|[)]|[(])\s*)+$)");
   if (std::regex_match(str, regexPattern)) {
     return status_e::OK;
   } else {
